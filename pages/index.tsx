@@ -2,6 +2,7 @@ import Posts from '../components/Posts';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { TPost } from '../types';
 import { getFeaturedPosts } from '../services/post.service';
+import Head from 'next/head';
 interface HomeProps {
   posts: TPost[];
   error: Error | unknown;
@@ -11,7 +12,12 @@ const Home = ({ error }: HomeProps) => {
   const { data: posts } = useQuery('posts', getFeaturedPosts);
 
   return (
-    <> {error ? <p>Something wrong happen...</p> : <Posts posts={posts} />}</>
+    <>
+      <Head>
+        <title>All featured posts</title>
+      </Head>
+      {error ? <p>Something wrong happen...</p> : <Posts posts={posts} />}
+    </>
   );
 };
 

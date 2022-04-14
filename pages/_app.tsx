@@ -6,6 +6,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import Categories from '../components/Categories';
 import { ReactNode, useState } from 'react';
 import Layout from '../components/Layout';
+import Head from 'next/head';
 
 declare module 'react-query/types/react/QueryClientProvider' {
   interface QueryClientProviderProps {
@@ -25,6 +26,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
+        <Head>
+          <title>My Blogs</title>
+          <meta name="description" content="Free Blogs" />
+          <meta
+            name="keywords"
+            content="Blog, photography, education, sports, webdevelopment"
+          />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </Head>
         <Layout>
           <Container maxWidth="md">
             <Grid container spacing={2}>

@@ -3,6 +3,7 @@ import { TPost } from '../../types';
 import Posts from '../../components/Posts';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { getPostsByCategory } from '../../services/post.service';
+import Head from 'next/head';
 
 interface PostsWithCategoryPageProps {
   categoryName: string;
@@ -17,7 +18,14 @@ PostsWithCategoryPageProps) => {
     getPostsByCategory(categoryName)
   );
 
-  return <Posts posts={posts} />;
+  return (
+    <>
+      <Head>
+        <title>All {categoryName} posts</title>
+      </Head>
+      <Posts posts={posts} />
+    </>
+  );
 };
 
 export const getStaticPaths: GetStaticPaths = async (context) => {

@@ -6,6 +6,7 @@ import {
   Divider,
 } from '@mui/material';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import Head from 'next/head';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import CommentSection from '../../components/CommentSection';
 import Form from '../../components/Form';
@@ -21,18 +22,15 @@ interface PostDetailPageProps {
 }
 
 const PostDetailPage = ({ postId }: PostDetailPageProps) => {
-  // if (!post) {
-  //   return <p>Loading...</p>;
-  // }
-
-  // const { title, body, image, author, category, id } = post;
-
   const { data } = useQuery(['posts', postId], () => getPostById(postId));
 
   const post = data;
 
   return (
     <>
+      <Head>
+        <title>{post.title}</title>
+      </Head>
       <Card sx={{ marginTop: '4.5rem' }}>
         <CardMedia
           component="img"
