@@ -24,6 +24,7 @@ export async function getStaticProps() {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
+    revalidate: 3600,
   };
   // try {
   //   const { data } = await instance.get('posts');

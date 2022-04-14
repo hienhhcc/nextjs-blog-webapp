@@ -6,34 +6,46 @@ import {
   Divider,
 } from '@mui/material';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 import CommentSection from '../../components/CommentSection';
 import Form from '../../components/Form';
 import MUIInput from '../../components/Form/MUIInput';
 import PostCommentForm from '../../components/Form/PostCommentForm';
 import instance from '../../configs/axios-instance';
+import { getPostById } from '../../services/post.service';
 import { TPost } from '../../types';
 
 interface PostDetailPageProps {
-  post: TPost;
+  post?: TPost;
+  postId: string;
 }
 
-const PostDetailPage = ({ post }: PostDetailPageProps) => {
-  if (!post) {
-    return <p>Loading...</p>;
-  }
+const PostDetailPage = ({ postId }: PostDetailPageProps) => {
+  // if (!post) {
+  //   return <p>Loading...</p>;
+  // }
 
-  const { title, body, image, author, category, id } = post;
+  // const { title, body, image, author, category, id } = post;
+
+  const { data } = useQuery(['posts', postId], () => getPostById(postId));
+
+  const post = data;
 
   return (
     <>
       <Card sx={{ marginTop: '4.5rem' }}>
-        <CardMedia component="img" height="300" image={image} alt="Image alt" />
+        <CardMedia
+          component="img"
+          height="300"
+          image={post.image}
+          alt="Image alt"
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {title}
+            {post.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {body}
+            {post.body}
           </Typography>
         </CardContent>
       </Card>
@@ -44,7 +56,7 @@ const PostDetailPage = ({ post }: PostDetailPageProps) => {
           <PostCommentForm />
         </CardContent>
       </Card>
-      <CommentSection postId={id} />
+      <CommentSection postId={postId} />
     </>
   );
 };
@@ -63,20 +75,34 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    const { data } = await instance.get(`/posts/${context?.params?.postId}`);
+  const queryClient = new QueryClient();
 
-    return {
-      props: {
-        post: data,
-      },
-      revalidate: 3600,
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
+  const postId = context.params?.postId as string;
+
+  await queryClient.prefetchQuery(['posts', postId], () => getPostById(postId));
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      postId,
+    },
+    revalidate: 3600,
+  };
+
+  // try {
+  //   const { data } = await instance.get(`/posts/${context?.params?.postId}`);
+
+  //   return {
+  //     props: {
+  //       post: data,
+  //     },
+  //     revalidate: 3600,
+  //   };
+  // } catch (error) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
 };
 
 export default PostDetailPage;

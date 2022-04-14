@@ -11,6 +11,11 @@ export const getPostsByCategory = async (categoryName: string) => {
   return response.data;
 };
 
+export const getPostById = async (id: string) => {
+  const response = await instance.get(`/posts/${id}`);
+  return response.data;
+};
+
 export const getCommentByPostId = async (postId: string) => {
   const response = await instance.get(`/comments?postId=${postId}`);
   return response.data;
