@@ -5,4 +5,5 @@ export type TPost = {
   author: string;
   image: string;
   category: string;
+  isFeatured: boolean;
 };

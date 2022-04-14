@@ -6,6 +6,7 @@ import {
   Divider,
 } from '@mui/material';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import CommentSection from '../../components/CommentSection';
 import Form from '../../components/Form';
 import MUIInput from '../../components/Form/MUIInput';
 import PostCommentForm from '../../components/Form/PostCommentForm';
@@ -21,7 +22,7 @@ const PostDetailPage = ({ post }: PostDetailPageProps) => {
     return <p>Loading...</p>;
   }
 
-  const { title, body, image, author, category } = post;
+  const { title, body, image, author, category, id } = post;
 
   return (
     <>
@@ -43,6 +44,7 @@ const PostDetailPage = ({ post }: PostDetailPageProps) => {
           <PostCommentForm />
         </CardContent>
       </Card>
+      <CommentSection postId={id} />
     </>
   );
 };

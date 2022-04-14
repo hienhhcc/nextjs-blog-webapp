@@ -3,7 +3,7 @@ import * as yup from 'yup';
 
 import Form from '../index';
 import MUIInput from '../MUIInput';
-import usePostComment from './hooks';
+import usePostCommentForm from './hooks';
 
 const schema = yup
   .object({
@@ -15,7 +15,7 @@ const schema = yup
 const PostCommentForm = () => {
   const {
     handlers: { onSubmitPostComment },
-  } = usePostComment();
+  } = usePostCommentForm();
 
   return (
     <Form
