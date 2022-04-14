@@ -1,19 +1,20 @@
 import { Card, CardContent, Divider, Typography } from '@mui/material';
 import { useQuery } from 'react-query';
 import CircularProgress from '@mui/material/CircularProgress';
-import instance from '../../configs/axios-instance';
 import Comments from './Comments';
-import { TComment } from '../../types';
+import { getCommentByPostId } from '../../services/post.service';
 
 interface Props {
   postId: string;
 }
 
 const CommentSection = ({ postId }: Props) => {
-  const { isLoading, data, isError, error } = useQuery(
-    'comments',
-    async () => await instance.get(`/comments?postId=${postId}`)
-  );
+  const {
+    isLoading,
+    data: comments,
+    isError,
+    error,
+  } = useQuery('comments', () => getCommentByPostId(postId));
 
   if (isLoading) {
     return <CircularProgress />;
@@ -23,10 +24,8 @@ const CommentSection = ({ postId }: Props) => {
     return <p>Some thing wrong happened...</p>;
   }
 
-  const comments = data?.data;
-
   return (
-    <Card>
+    <Card sx={{ marginTop: '1rem' }}>
       <CardContent>
         <Typography component="h5">Comments</Typography>
         <Divider />

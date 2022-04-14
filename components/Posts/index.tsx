@@ -8,7 +8,7 @@ interface PostsProps {
 
 const Posts = ({ posts }: PostsProps) => {
   return (
-    <List>
+    <List sx={{ marginTop: '3rem' }}>
       {posts.map((post) => (
         <PostCard key={post.id} {...post} />
       ))}

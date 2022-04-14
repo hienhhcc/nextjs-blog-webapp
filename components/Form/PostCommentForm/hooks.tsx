@@ -3,8 +3,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { v4 as uuidv4 } from 'uuid';
 
-import instance from '../../../configs/axios-instance';
-import { TComment } from '../../../types';
+import { addComment } from '../../../services/post.service';
 
 type PostCommentFormType = {
   body: string;
@@ -13,9 +12,7 @@ type PostCommentFormType = {
 };
 
 const usePostCommentForm = () => {
-  const mutation = useMutation((newComment: TComment) => {
-    return instance.post('/comments', newComment);
-  });
+  const mutation = useMutation(addComment);
   const router = useRouter();
   const queryClient = useQueryClient();
 

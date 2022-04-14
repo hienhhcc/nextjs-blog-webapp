@@ -1,13 +1,22 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { TPost } from '../../types';
-import instance from '../../configs/axios-instance';
 import Posts from '../../components/Posts';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { getPostsByCategory } from '../../services/post.service';
 
 interface PostsWithCategoryPageProps {
-  posts: TPost[];
+  categoryName: string;
+  posts?: TPost[];
 }
 
-const PostsWithCategoryPage = ({ posts }: PostsWithCategoryPageProps) => {
+const PostsWithCategoryPage = ({
+  categoryName,
+}: // posts
+PostsWithCategoryPageProps) => {
+  const { data: posts } = useQuery(['posts', categoryName], () =>
+    getPostsByCategory(categoryName)
+  );
+
   return <Posts posts={posts} />;
 };
 
@@ -32,22 +41,38 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    const { data } = await instance.get(
-      '/posts?category=' + context.params?.categoryName
-    );
+  const queryClient = new QueryClient();
 
-    return {
-      props: {
-        posts: data,
-      },
-      revalidate: 3600,
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
+  const categoryName = context.params?.categoryName;
+
+  await queryClient.prefetchQuery(['posts', categoryName], () =>
+    getPostsByCategory(categoryName as string)
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      categoryName,
+    },
+    revalidate: 3600,
+  };
+  // try {
+  //   console.log(context);
+  //   const { data } = await instance.get(
+  //     '/posts?category=' + context.params?.categoryName
+  //   );
+
+  //   return {
+  //     props: {
+  //       posts: data,
+  //     },
+  //     revalidate: 3600,
+  //   };
+  // } catch (error) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
 };
 
 export default PostsWithCategoryPage;

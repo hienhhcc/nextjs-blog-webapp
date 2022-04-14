@@ -5,6 +5,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 
 import Categories from '../components/Categories';
 import { ReactNode, useState } from 'react';
+import Layout from '../components/Layout';
 
 declare module 'react-query/types/react/QueryClientProvider' {
   interface QueryClientProviderProps {
@@ -24,16 +25,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
-        <Container maxWidth="md">
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
-              <Component {...pageProps} />
+        <Layout>
+          <Container maxWidth="md">
+            <Grid container spacing={2}>
+              <Grid item xs={8}>
+                <Component {...pageProps} />
+              </Grid>
+              <Grid item xs={4}>
+                <Categories />
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Categories />
-            </Grid>
-          </Grid>
-        </Container>
+          </Container>
+        </Layout>
       </Hydrate>
     </QueryClientProvider>
   );

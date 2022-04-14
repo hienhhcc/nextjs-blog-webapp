@@ -12,7 +12,7 @@ const Categories = () => {
   const categories = ['Photography', 'Education', 'Sports', 'WebDevelopment'];
 
   return (
-    <Card sx={{ position: 'fixed', marginTop: '1.5rem' }}>
+    <Card sx={{ position: 'fixed', marginTop: '4.5rem' }}>
       <CardContent>
         <Typography component="h3">Categories</Typography>
         <Divider />

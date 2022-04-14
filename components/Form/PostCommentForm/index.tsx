@@ -1,5 +1,7 @@
 import { Button, Typography } from '@mui/material';
 import * as yup from 'yup';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 import Form from '../index';
 import MUIInput from '../MUIInput';
@@ -15,6 +17,7 @@ const schema = yup
 const PostCommentForm = () => {
   const {
     handlers: { onSubmitPostComment },
+    state: { isLoading, isError },
   } = usePostCommentForm();
 
   return (
@@ -44,10 +47,20 @@ const PostCommentForm = () => {
           placeholder: 'Your name',
         }}
       />
-
-      <Button variant="contained" type="submit" sx={{ mt: 1 }}>
-        Post comment
-      </Button>
+      {isLoading ? (
+        <LoadingButton
+          loading
+          loadingPosition="start"
+          startIcon={<SaveIcon />}
+          variant="outlined"
+        >
+          Posting...
+        </LoadingButton>
+      ) : (
+        <Button variant="contained" type="submit" sx={{ mt: 1 }}>
+          Post comment
+        </Button>
+      )}
     </Form>
   );
 };

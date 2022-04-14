@@ -26,7 +26,7 @@ const PostDetailPage = ({ post }: PostDetailPageProps) => {
 
   return (
     <>
-      <Card sx={{ marginTop: '1.5rem' }}>
+      <Card sx={{ marginTop: '4.5rem' }}>
         <CardMedia component="img" height="300" image={image} alt="Image alt" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

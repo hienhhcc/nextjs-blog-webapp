@@ -1,34 +1,44 @@
-import { Grid } from '@mui/material';
-import Categories from '../components/Categories';
 import Posts from '../components/Posts';
-import instance from '../configs/axios-instance';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { TPost } from '../types';
+import { getFeaturedPosts } from '../services/post.service';
 interface HomeProps {
   posts: TPost[];
   error: Error | unknown;
 }
 
-const Home = ({ posts, error }: HomeProps) => {
+const Home = ({ error }: HomeProps) => {
+  const { data: posts } = useQuery('posts', getFeaturedPosts);
+
   return (
     <> {error ? <p>Something wrong happen...</p> : <Posts posts={posts} />}</>
   );
 };
 
 export async function getStaticProps() {
-  try {
-    const { data } = await instance.get('posts');
+  const queryClient = new QueryClient();
 
-    return {
-      props: {
-        posts: data,
-      },
-      revalidate: 60,
-    };
-  } catch (error) {
-    return {
-      props: { error },
-    };
-  }
+  await queryClient.prefetchQuery('posts', getFeaturedPosts);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+  // try {
+  //   const { data } = await instance.get('posts');
+
+  //   return {
+  //     props: {
+  //       posts: data,
+  //     },
+  //     revalidate: 60,
+  //   };
+  // } catch (error) {
+  //   return {
+  //     props: { error },
+  //   };
+  // }
 }
 
 export default Home;
